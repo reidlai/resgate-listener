@@ -9,6 +9,17 @@
 
 [Extract from feature spec: primary requirement + technical approach from research]
 
+## User Stories
+
+<!--
+  ACTION REQUIRED: Copy the User Stories or Developer Stories from the spec and map
+  out the high-level technical delivery approach for each.
+-->
+
+- **As a** [role], **I want to** [action] **so that** [benefit].
+  - **Technical Delivery**: [Briefly describe how this will be implemented via UI/API/components]
+  - **Acceptance**: [Testable criteria confirming delivery]
+
 ## Technical Context
 
 <!--
@@ -17,12 +28,12 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Language/Version**: Golang 
+**Primary Dependencies**: RES protocol, go-res
 **Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Testing**: [e.g., testing, Ginkgo, or NEEDS CLARIFICATION]  
+**Target Platform**: distroless Docker image
+**Project Type**: go-res consumer web-service
 **Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
 **Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
@@ -31,7 +42,14 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Containers**: Uses distroless base image with multi-stage builds.
+- [ ] **Containers**: Runs as non-root, minimal capabilities, and includes explicit HEALTHCHECK.
+- [ ] **Dependencies**: Uses permissive licenses (MIT, Apache-2.0, BSD) and has zero unaddressed critical CVEs.
+- [ ] **DevSecOps**: PR pipeline includes SCA, linting, secrets scanning, SAST, Trivy, and unit tests.
+- [ ] **DevSecOps**: CD pipelines per environment incorporate DAST, post-deploy integration, and Cucumber smoke tests.
+- [ ] **Engineering**: Adheres to Twelve-Factor and SOLID principles, or includes an approved waiver for deviation.
+- [ ] **Project Structure**: Follows the `golang-standards/project-layout` conventions.
+- [ ] **Planning**: Ensures all requirements are explicitly delivered via mapped User/Developer Stories within this plan.
 
 ## Project Structure
 
@@ -49,50 +67,24 @@ specs/[###-feature]/
 
 ### Source Code (repository root)
 <!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
+  ACTION REQUIRED: Expand the Go project layout tree below with the concrete 
+  packages/commands for this feature.
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+cmd/
+└── [app-name]/         # Main applications
+internal/
+├── models/             # Private application and library code
+├── services/           # (e.g. resgate handlers)
+└── [feature]/          
+pkg/
+└── [library-name]/     # Library code ok to use by external applications
+api/                    # OpenAPI/Swagger specs, JSON schema files, etc.
+test/                   # Additional external test apps and test data
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: [Document the specific packages, internal vs pkg decisions, and references created above]
 
 ## Complexity Tracking
 
