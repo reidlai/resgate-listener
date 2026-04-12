@@ -21,12 +21,12 @@ func init() {
 
 	// Global flags
 	RootCmd.PersistentFlags().String("config", "", "config file (default is rest-server.yaml)")
-	RootCmd.PersistentFlags().String("log-level", "", "Log level: DEBUG, INFO, WARN, ERROR")
-	RootCmd.PersistentFlags().String("log-format", "", "Log format: json, text")
+	RootCmd.PersistentFlags().String("log-level", "INFO", "Log level: DEBUG, INFO, WARN, ERROR")
+	RootCmd.PersistentFlags().String("log-format", "text", "Log format: json, text")
 	RootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging")
 	RootCmd.PersistentFlags().Bool("secure", false, "Enable secure mode")
-	RootCmd.PersistentFlags().String("tls-cert", "", "Path to TLS certificate file")
-	RootCmd.PersistentFlags().String("tls-key", "", "Path to TLS key file")
+	RootCmd.PersistentFlags().String("tls-cert-file", "", "Path to TLS certificate file")
+	RootCmd.PersistentFlags().String("tls-key-file", "", "Path to TLS key file")
 
 	if err := viper.BindPFlag("config", RootCmd.PersistentFlags().Lookup("config")); err != nil {
 		panic(err)
@@ -43,10 +43,10 @@ func init() {
 	if err := viper.BindPFlag("server.secure", RootCmd.PersistentFlags().Lookup("secure")); err != nil {
 		panic(err)
 	}
-	if err := viper.BindPFlag("server.tls-cert", RootCmd.PersistentFlags().Lookup("tls-cert")); err != nil {
+	if err := viper.BindPFlag("server.tls-cert-file", RootCmd.PersistentFlags().Lookup("tls-cert-file")); err != nil {
 		panic(err)
 	}
-	if err := viper.BindPFlag("server.tls-key", RootCmd.PersistentFlags().Lookup("tls-key")); err != nil {
+	if err := viper.BindPFlag("server.tls-key-file", RootCmd.PersistentFlags().Lookup("tls-key-file")); err != nil {
 		panic(err)
 	}
 }
@@ -81,8 +81,8 @@ func initConfig() {
 	_ = viper.BindEnv("server.log-format")
 	_ = viper.BindEnv("server.debug")
 	_ = viper.BindEnv("server.secure")
-	_ = viper.BindEnv("server.tls-cert")
-	_ = viper.BindEnv("server.tls-key")
+	_ = viper.BindEnv("server.tls-cert-file")
+	_ = viper.BindEnv("server.tls-key-file")
 
 	// Read config file (silently ignore if not found)
 	if err := viper.ReadInConfig(); err != nil {
