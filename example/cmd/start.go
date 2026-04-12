@@ -56,7 +56,7 @@ func runServer(cmd *cobra.Command, args []string) error {
 	// Create handler mapping
 	handlers := map[string]rmh.ResgateMessageHandler{
 		"get.examples":    exampleHandler,
-		"get.resource.*": exampleHandler,
+		"get.example.*": exampleHandler,
 	}
 
 	listenerInstance, err := listener.NewResgateListener(nc, handlers)

@@ -1,0 +1,9 @@
+.git
+.specify
+bin
+specs
+node_modules
+*.log
+.DS_Store
+Dockerfile*
+.dockerignore
