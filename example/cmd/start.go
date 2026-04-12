@@ -105,7 +105,7 @@ func startServer(cmd *cobra.Command, args []string) error {
 	// Initialize OTel Trace and Log SDKs
 	shutdown, err := initOTel()
 	if err != nil {
-		slog.Error("Failed to initialize OTel", "error", err)
+		slog.ErrorContext(context.Background(), "Failed to initialize OTel", "error", err)
 	} else {
 		defer shutdown(context.Background())
 	}
@@ -117,12 +117,12 @@ func startServer(cmd *cobra.Command, args []string) error {
 
 	natsURL := viper.GetString("resgate.nats-url")
 	logFormat := viper.GetString("server.log-format")
-	slog.Info("Starting dummy server...", "resgate.nats-url", natsURL, "server.log-format", logFormat)
+	slog.InfoContext(context.Background(), "Starting dummy server...", "resgate.nats-url", natsURL, "server.log-format", logFormat)
 
 	// Create NATS connection
 	nc, err := nats.Connect(natsURL)
 	if err != nil {
-		slog.Error("Failed to connect to NATS", "error", err)
+		slog.ErrorContext(context.Background(), "Failed to connect to NATS", "error", err)
 		return err
 	}
 	defer nc.Close()
@@ -139,13 +139,13 @@ func startServer(cmd *cobra.Command, args []string) error {
 
 	listenerInstance, err := listener.NewResgateListener(nc, handlers)
 	if err != nil {
-		slog.Error("Failed to create listener", "error", err)
+		slog.ErrorContext(context.Background(), "Failed to create listener", "error", err)
 		return err
 	}
 	defer listenerInstance.Close()
 
 	if err := listenerInstance.Listen(); err != nil {
-		slog.Error("Failed to start listening", "error", err)
+		slog.ErrorContext(context.Background(), "Failed to start listening", "error", err)
 		return err
 	}
 	
