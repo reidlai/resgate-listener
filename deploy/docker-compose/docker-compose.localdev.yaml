@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  nats:
+    image: nats:2.10
+    container_name: nats-local
+    command: ["-js", "-a", "0.0.0.0"]
+    ports:
+      - "4222:4222"
+      - "4223:4223"
+    networks:
+      - resgate-net
+    healthcheck:
+      test: ["CMD", "nats-server", "--health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  resgate:
+    image: resgateio/resgate:1.7
+    container_name: resgate-local
+    command: ["--nats", "nats://nats:4222", "--addr", "0.0.0.0"]
+    ports:
+      - "8080:8080"
+    depends_on:
+      nats:
+        condition: service_healthy
+    networks:
+      - resgate-net
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8080 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+networks:
+  resgate-net:
+    driver: bridge
